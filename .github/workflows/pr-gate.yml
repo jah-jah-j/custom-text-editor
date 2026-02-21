@@ -1,0 +1,17 @@
+name: PR Branch Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source branch
+        run: |
+          branch="${{ github.head_ref }}"
+          if [[ ! "$branch" =~ ^(release|hotfix)/ ]]; then
+            echo "::error::PR в main разрешены только из release/* или hotfix/* веток. Текущая: $branch"
+            exit 1
+          fi

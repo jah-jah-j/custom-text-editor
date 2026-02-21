@@ -1,0 +1,20 @@
+# При пуше в release/* — автоматически создаёт PR в main и develop
+name: Auto PR for release
+
+on:
+  push:
+    branches: [release/*]
+
+jobs:
+  create-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PR to main
+        run: gh pr create --base main --title "Release → main" --body "Auto-generated" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: PR to develop
+        run: gh pr create --base develop --title "Release → develop" --body "Auto-generated" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
